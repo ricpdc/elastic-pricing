@@ -1,0 +1,6 @@
+# read_price_data.py
+
+# build_qubo_matrix.py
+
+# solve_qubo_model.py
+dwave-ocean-sdk>=3.3.0

@@ -1,0 +1,8 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+
+# Virtual environment
+elastic-pricing-env/
+
+# VSCode-specific files
+.vscode/
