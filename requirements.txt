@@ -4,3 +4,6 @@
 
 # solve_qubo_model.py
 dwave-ocean-sdk>=3.3.0
+
+# generate_data.py
+numpy
