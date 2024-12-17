@@ -3,6 +3,8 @@ import random
 import numpy as np
 import csv
 from itertools import combinations
+import time
+from multiprocessing import Pool, cpu_count
 
 
 # Create the output directory if it does not exist
@@ -61,62 +63,122 @@ def generate_prices_and_margins(
     return prices, valid_prices_map
 
 
-# Generate cross elasticities between products
-def generate_cross_elasticities(disjoint_groups, valid_prices_map, elasticity_density):
+# Generate cross elasticities between two products in a group
+def generate_elasticities_for_pair(args):
+    product_A, product_B, valid_prices_map, elasticity_density, seen_combinations = args
     elasticities = []
-    seen_pairs = set()
 
-    for group in disjoint_groups:
-        # Ensure each group is at least a connected graph
-        for product_A, product_B in zip(group, group[1:]):
-            if (
-                product_A,
-                product_B,
-            ) not in seen_pairs and random.random() < elasticity_density:
-                seen_pairs.add((product_A, product_B))
-                for price_A in valid_prices_map[product_A]:
-                    elasticity_value = random.uniform(-20, 20)
-                    elasticities.append(
-                        [product_A, product_B, price_A, round(elasticity_value, 2)]
-                    )
+    # A -> B connection
+    if random.random() < elasticity_density:
+        price_A_values = valid_prices_map[product_A]
+        elasticity_values = np.random.uniform(-20, 20, len(price_A_values))
+        for price_A, elasticity_value in zip(price_A_values, elasticity_values):
+            combination = (product_A, product_B, price_A)
+            if combination not in seen_combinations:
+                seen_combinations.add(combination)
+                elasticities.append(
+                    [product_A, product_B, price_A, round(elasticity_value, 2)]
+                )
 
-            if (
-                product_B,
-                product_A,
-            ) not in seen_pairs and random.random() < elasticity_density:
-                seen_pairs.add((product_B, product_A))
-                for price_B in valid_prices_map[product_B]:
-                    elasticity_value = random.uniform(-20, 20)
-                    elasticities.append(
-                        [product_B, product_A, price_B, round(elasticity_value, 2)]
-                    )
-
-        # Add additional connections based on elasticity_density
-        if elasticity_density > 0:
-            for product_A, product_B in combinations(group, 2):
-                if (
-                    product_A,
-                    product_B,
-                ) not in seen_pairs and random.random() < elasticity_density:
-                    seen_pairs.add((product_A, product_B))
-                    for price_A in valid_prices_map[product_A]:
-                        elasticity_value = random.uniform(-20, 20)
-                        elasticities.append(
-                            [product_A, product_B, price_A, round(elasticity_value, 2)]
-                        )
-
-                if (
-                    product_B,
-                    product_A,
-                ) not in seen_pairs and random.random() < elasticity_density:
-                    seen_pairs.add((product_B, product_A))
-                    for price_B in valid_prices_map[product_B]:
-                        elasticity_value = random.uniform(-20, 20)
-                        elasticities.append(
-                            [product_B, product_A, price_B, round(elasticity_value, 2)]
-                        )
+    # B -> A connection
+    if random.random() < elasticity_density:
+        price_B_values = valid_prices_map[product_B]
+        elasticity_values = np.random.uniform(-20, 20, len(price_B_values))
+        for price_B, elasticity_value in zip(price_B_values, elasticity_values):
+            combination = (product_B, product_A, price_B)
+            if combination not in seen_combinations:
+                seen_combinations.add(combination)
+                elasticities.append(
+                    [product_B, product_A, price_B, round(elasticity_value, 2)]
+                )
 
     return elasticities
+
+
+# Generate cross elasticities between products
+def generate_cross_elasticities(disjoint_groups, valid_prices_map, elasticity_density):
+    seen_combinations = set()
+    output_file = "temp_elasticities.csv"
+
+    with open(output_file, "w", newline="") as f:
+        writer = csv.writer(f, delimiter=";")
+        writer.writerow(
+            ["product_A", "affected_product_B", "price_A", "afected_margin_B"]
+        )
+
+        # Parallelize the generation of elasticities
+        pool = Pool(processes=cpu_count())
+        tasks = []
+
+        for group in disjoint_groups:
+            # Ensure a minimum connection (linear chain) within each disjoint group
+            for product_A, product_B in zip(group, group[1:]):
+                # Always connect A -> B to enforce graph connectivity
+                price_A_values = valid_prices_map[product_A]
+                elasticity_values = np.random.uniform(-20, 20, len(price_A_values))
+                for price_A, elasticity_value in zip(price_A_values, elasticity_values):
+                    combination = (product_A, product_B, price_A)
+                    if combination not in seen_combinations:
+                        seen_combinations.add(combination)
+                        writer.writerow(
+                            [
+                                product_A,
+                                product_B,
+                                price_A,
+                                round(elasticity_value, 2),
+                            ]
+                        )
+
+                # Generate B -> A based on elasticity_density
+                if random.random() < elasticity_density:
+                    price_B_values = valid_prices_map[product_B]
+                    elasticity_values = np.random.uniform(-20, 20, len(price_B_values))
+                    for price_B, elasticity_value in zip(
+                        price_B_values, elasticity_values
+                    ):
+                        combination = (product_B, product_A, price_B)
+                        if combination not in seen_combinations:
+                            seen_combinations.add(combination)
+                            writer.writerow(
+                                [
+                                    product_B,
+                                    product_A,
+                                    price_B,
+                                    round(elasticity_value, 2),
+                                ]
+                            )
+
+            # Add additional connections based on elasticity_density
+            for product_A, product_B in combinations(group, 2):
+                tasks.append(
+                    (
+                        product_A,
+                        product_B,
+                        valid_prices_map,
+                        elasticity_density,
+                        seen_combinations,
+                    )
+                )
+
+                # Process tasks in smaller chunks to save memory
+                if len(tasks) >= 1000:
+                    results = pool.map(
+                        generate_elasticities_for_pair, tasks, chunksize=50
+                    )
+                    for result in results:
+                        writer.writerows(result)
+                    tasks = []
+
+        # Process remaining tasks
+        if tasks:
+            results = pool.map(generate_elasticities_for_pair, tasks, chunksize=50)
+            for result in results:
+                writer.writerows(result)
+
+        pool.close()
+        pool.join()
+
+    return output_file
 
 
 # Save data to a CSV file
@@ -138,6 +200,8 @@ def generate_synthetic_data(
     filename_prefix="synthetic",
     margin_probabilities=None,
 ):
+    start_time = time.time()
+
     # Create output directory and validate inputs
     create_output_directory(output_dir)
     validate_inputs(num_products, elasticity_density, num_disjoint_graphs)
@@ -155,7 +219,7 @@ def generate_synthetic_data(
     )
 
     # Generate cross elasticities
-    elasticities = generate_cross_elasticities(
+    elasticities_file = generate_cross_elasticities(
         disjoint_groups, valid_prices_map, elasticity_density
     )
 
@@ -168,13 +232,14 @@ def generate_synthetic_data(
     )
 
     save_to_csv(prices_filename, ["product", "price", "margin_of_sales"], prices)
-    save_to_csv(
-        elasticities_filename,
-        ["product_A", "affected_product_B", "price_A", "afected_margin_B"],
-        elasticities,
-    )
 
-    print(f"Data generated: {prices_filename} and {elasticities_filename}")
+    # Move the temporary file to the final location
+    os.rename(elasticities_file, elasticities_filename)
+
+    end_time = time.time()
+    print(
+        f"Data generated: {prices_filename} and {elasticities_filename} in {end_time - start_time:.2f} seconds"
+    )
 
 
 if __name__ == "__main__":
@@ -183,9 +248,9 @@ if __name__ == "__main__":
         num_products=5,
         price_range=(2, 3),
         margin_range=(100, 200),
-        elasticity_density=0.5,
+        elasticity_density=0,
         num_disjoint_graphs=1,
-        output_dir="data/synthetic_data",
+        output_dir="data/synthetic_data/simple_examples",
         filename_prefix="example_1",
     )
 
@@ -194,10 +259,10 @@ if __name__ == "__main__":
         num_products=5,
         price_range=(2, 4),
         margin_range=(10, 1000),
-        margin_probabilities=[0.5, 0.3, 0.2],
+        margin_probabilities=[1, 0, 0, 0],
         elasticity_density=0.3,
         num_disjoint_graphs=1,
-        output_dir="data/synthetic_data",
+        output_dir="data/synthetic_data/simple_examples",
         filename_prefix="example_2",
     )
 
@@ -206,8 +271,19 @@ if __name__ == "__main__":
         num_products=6,
         price_range=(2, 3),
         margin_range=(100, 300),
-        elasticity_density=0.5,
+        elasticity_density=0,
         num_disjoint_graphs=2,
-        output_dir="data/synthetic_data",
+        output_dir="data/synthetic_data/simple_examples",
         filename_prefix="example_3",
+    )
+
+    # Example 4: disjoint groups of products
+    generate_synthetic_data(
+        num_products=6,
+        price_range=(2, 3),
+        margin_range=(100, 300),
+        elasticity_density=1,
+        num_disjoint_graphs=2,
+        output_dir="data/synthetic_data/simple_examples",
+        filename_prefix="example_4",
     )
