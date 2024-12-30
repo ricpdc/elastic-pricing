@@ -100,7 +100,6 @@ def generate_elasticities_for_group(
     group, valid_prices_map, elasticity_density, output_file
 ):
     seen_combinations = set()
-    tasks = []
 
     with open(output_file, "w", newline="") as f:
         writer = csv.writer(f, delimiter=";")
