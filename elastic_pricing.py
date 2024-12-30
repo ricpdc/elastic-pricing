@@ -1,5 +1,6 @@
 from utils import read_price_data, build_qubo_matrix, solve_qubo_model
 from utils import check_expected_products_list, check_price_selection_constraints
+from utils import validate_qubo_size
 
 
 def main():
@@ -13,15 +14,28 @@ def main():
     )
 
     # Build the QUBO matrix
+    print("Building the QUBO matrix...")
     Q = build_qubo_matrix(product_prices, cross_product_prices, min_margins)
 
+    # Validate the QUBO matrix size
+    print("Validating the QUBO matrix size...")
+    max_variables = 175
+    max_connections = 30625
+
+    if not validate_qubo_size(Q, max_variables, max_connections):
+        print("QUBO matrix size validation failed.")
+        return
+
     # Solve the QUBO model
+    print("Solving the QUBO model...")
     result = solve_qubo_model(Q)
 
     # Print the result
+    print("Result: ")
     print(result.first)
 
     # Validate the result
+    print("Validating the result...")
     sample = result.first.sample
 
     # Check if the solution contains all the expected products
