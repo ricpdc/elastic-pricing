@@ -6,3 +6,6 @@ elastic-pricing-env/
 
 # VSCode-specific files
 .vscode/
+
+# Synthetic data
+data/
