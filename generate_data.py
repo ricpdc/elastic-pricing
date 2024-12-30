@@ -102,47 +102,53 @@ def generate_elasticities_for_group(
     seen_combinations = set()
     tasks = []
 
-    for product_A, product_B in zip(group, group[1:]):
-        price_A_values = valid_prices_map[product_A]
-        elasticity_values = np.random.uniform(-20, 20, len(price_A_values))
-        for price_A, elasticity_value in zip(price_A_values, elasticity_values):
-            combination = (product_A, product_B, price_A)
-            if combination not in seen_combinations:
-                seen_combinations.add(combination)
-                tasks.append(
-                    [product_A, product_B, price_A, round(elasticity_value, 2)]
-                )
-
-        if random.random() < elasticity_density:
-            price_B_values = valid_prices_map[product_B]
-            elasticity_values = np.random.uniform(-20, 20, len(price_B_values))
-            for price_B, elasticity_value in zip(price_B_values, elasticity_values):
-                combination = (product_B, product_A, price_B)
-                if combination not in seen_combinations:
-                    seen_combinations.add(combination)
-                    tasks.append(
-                        [product_B, product_A, price_B, round(elasticity_value, 2)]
-                    )
-
-    pair_tasks = [
-        (product_A, product_B, valid_prices_map, elasticity_density, seen_combinations)
-        for product_A, product_B in combinations(group, 2)
-    ]
-
-    pool = Pool(processes=cpu_count())
-    results = pool.map(generate_elasticities_for_pair, pair_tasks, chunksize=50)
-    pool.close()
-    pool.join()
-
-    for result in results:
-        tasks.extend(result)
-
     with open(output_file, "w", newline="") as f:
         writer = csv.writer(f, delimiter=";")
         writer.writerow(
             ["product_A", "affected_product_B", "price_A", "affected_margin_B"]
         )
-        writer.writerows(tasks)
+
+        for product_A, product_B in zip(group, group[1:]):
+            price_A_values = valid_prices_map[product_A]
+            elasticity_values = np.random.uniform(-20, 20, len(price_A_values))
+            for price_A, elasticity_value in zip(price_A_values, elasticity_values):
+                combination = (product_A, product_B, price_A)
+                if combination not in seen_combinations:
+                    seen_combinations.add(combination)
+                    writer.writerow(
+                        [product_A, product_B, price_A, round(elasticity_value, 2)]
+                    )
+
+            if random.random() < elasticity_density:
+                price_B_values = valid_prices_map[product_B]
+                elasticity_values = np.random.uniform(-20, 20, len(price_B_values))
+                for price_B, elasticity_value in zip(price_B_values, elasticity_values):
+                    combination = (product_B, product_A, price_B)
+                    if combination not in seen_combinations:
+                        seen_combinations.add(combination)
+                        writer.writerow(
+                            [product_B, product_A, price_B, round(elasticity_value, 2)]
+                        )
+
+        pair_tasks = [
+            (
+                product_A,
+                product_B,
+                valid_prices_map,
+                elasticity_density,
+                seen_combinations,
+            )
+            for product_A, product_B in combinations(group, 2)
+        ]
+
+        pool = Pool(processes=cpu_count())
+        for i in range(0, len(pair_tasks), 1000):
+            chunk = pair_tasks[i : i + 1000]
+            results = pool.map(generate_elasticities_for_pair, chunk, chunksize=100)
+            for result in results:
+                writer.writerows(result)
+        pool.close()
+        pool.join()
 
 
 # Save data to a CSV file
@@ -201,47 +207,14 @@ def generate_synthetic_data(
 
 
 if __name__ == "__main__":
-    # Example 1: homogeneous margins
+    # Example for generating synthetic data
     generate_synthetic_data(
         num_products=5,
         price_range=(2, 3),
         margin_range=(100, 200),
+        margin_probabilities=[0.5, 0.3, 0.2],
         elasticity_density=0,
         num_disjoint_graphs=1,
-        output_dir="data/synthetic_data/simple_examples",
+        output_dir="data/examples",
         filename_prefix="example_1",
-    )
-
-    # Example 2: margin variability
-    generate_synthetic_data(
-        num_products=5,
-        price_range=(2, 4),
-        margin_range=(10, 1000),
-        margin_probabilities=[1, 0, 0, 0],
-        elasticity_density=0.3,
-        num_disjoint_graphs=1,
-        output_dir="data/synthetic_data/simple_examples",
-        filename_prefix="example_2",
-    )
-
-    # Example 3: disjoint groups of products
-    generate_synthetic_data(
-        num_products=6,
-        price_range=(2, 3),
-        margin_range=(100, 300),
-        elasticity_density=0,
-        num_disjoint_graphs=2,
-        output_dir="data/synthetic_data/simple_examples",
-        filename_prefix="example_3",
-    )
-
-    # Example 4: disjoint groups of products
-    generate_synthetic_data(
-        num_products=6,
-        price_range=(2, 3),
-        margin_range=(100, 300),
-        elasticity_density=1,
-        num_disjoint_graphs=2,
-        output_dir="data/synthetic_data/simple_examples",
-        filename_prefix="example_4",
     )
