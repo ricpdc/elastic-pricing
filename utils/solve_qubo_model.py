@@ -18,7 +18,7 @@ def solve_qubo_model(Q, offset=0, solver_type="quantum", num_reads=10):
         result = solver.sample(bqm)
     elif solver_type == "quantum":
         solver = EmbeddingComposite(DWaveSampler())
-        result = solver.sample(bqm, num_reads=num_reads)
+        result = solver.sample(bqm, num_reads=num_reads, auto_scale=True)
     else:
         raise ValueError(f"Solver {solver_type} is not supported")
 
