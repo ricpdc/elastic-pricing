@@ -82,7 +82,7 @@ def save_subgraph_data(
     # Filter the prices and cross elasticities to include only the products in the subgraph
     subgraph_nodes = set(subgraph.nodes())
     filtered_prices = [
-        (product, price, margin)
+        (product, price, int(margin))
         for (product, price), margin in product_prices.items()
         if product in subgraph_nodes
     ]
