@@ -23,7 +23,7 @@ def determine_graph_limits(product_prices):
     elif max_prices_per_product <= 4:
         max_size = 40
     elif max_prices_per_product <= 5:
-        max_size = 5  # 35
+        max_size = 35
     elif max_prices_per_product <= 7:
         max_size = 25
     elif max_prices_per_product <= 8:
