@@ -2,7 +2,7 @@ import networkx as nx
 
 
 # Apply kernighan_lin_bisection to partition a graph into two subgraphs
-def partition_graph(graph, max_size):
+def kernighan_lin_clustering(graph, max_size):
     subgraphs = []
     queue = [graph]
 
@@ -15,7 +15,6 @@ def partition_graph(graph, max_size):
             continue
 
         # Otherwise, we partition the graph into two subgraphs
-        nodes = list(current_graph.nodes())
         partition = nx.algorithms.community.kernighan_lin_bisection(current_graph)
         subgraph1 = current_graph.subgraph(partition[0]).copy()
         subgraph2 = current_graph.subgraph(partition[1]).copy()
