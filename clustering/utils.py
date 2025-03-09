@@ -3,7 +3,7 @@ import csv
 import networkx as nx
 
 
-def determine_graph_limits(product_prices):
+def determine_graph_limits(product_prices, solver_type):
     # Calculate the total number of distinct products
     num_products = len(set(p[0] for p in product_prices))
 
@@ -14,6 +14,19 @@ def determine_graph_limits(product_prices):
     )
 
     # Define the maximum allowable size of subgraphs based on the max prices per product
+    if solver_type == "quantum":
+        max_size = quantum_limits(max_prices_per_product)
+    elif solver_type == "hybrid":
+        max_size = quantum_limits(max_prices_per_product)
+    elif solver_type == "exact":
+        max_size = simulated_limits(max_prices_per_product)
+    else:
+        raise ValueError(f"Solver {solver_type} is not supported")
+
+    return num_products, max_prices_per_product, max_size
+
+
+def quantum_limits(max_prices_per_product):
     if max_prices_per_product == 1:
         max_size = 175
     elif max_prices_per_product <= 2:
@@ -37,7 +50,32 @@ def determine_graph_limits(product_prices):
     else:
         raise ValueError(f"Too many prices per product.")
 
-    return num_products, max_prices_per_product, max_size
+    return max_size
+
+
+def simulated_limits(max_prices_per_product):
+    if max_prices_per_product == 1:
+        max_size = 25
+    elif max_prices_per_product <= 2:
+        max_size = 12
+    elif max_prices_per_product <= 3:
+        max_size = 8
+    elif max_prices_per_product <= 4:
+        max_size = 6
+    elif max_prices_per_product <= 5:
+        max_size = 5
+    elif max_prices_per_product <= 6:
+        max_size = 4
+    elif max_prices_per_product <= 8:
+        max_size = 3
+    elif max_prices_per_product <= 12:
+        max_size = 2
+    elif max_prices_per_product <= 25:
+        max_size = 1
+    else:
+        raise ValueError(f"Too many prices per product.")
+
+    return max_size
 
 
 # Build a NetworkX graph from the cross elasticities data
@@ -97,11 +135,9 @@ def save_subgraph_data(
     ]
 
     # Save the filtered prices and cross elasticities to CSV files
-    prices_file = os.path.join(
-        output_dir, f"{prefix}_subgraph{subgraph_index}_elasticity_prices.csv"
-    )
+    prices_file = os.path.join(output_dir, f"{subgraph_index}_elasticity_prices.csv")
     cross_elasticity_file = os.path.join(
-        output_dir, f"{prefix}_subgraph{subgraph_index}_cross_elasticity_prices.csv"
+        output_dir, f"{subgraph_index}_cross_elasticity_prices.csv"
     )
 
     with open(prices_file, "w", newline="") as f:
