@@ -1,0 +1,174 @@
+.input-data-page {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  height: 100%;
+  width: 100%;
+}
+
+.input-data-page-container {
+  display: flex;
+  height: 100%;
+
+  gap: 30px;
+}
+
+.input-data-page-container > .left-panel {
+  width: 50%;
+  height: 100%;
+  min-width: 250px;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  gap: 20px;
+}
+
+.input-data-page-container > .left-panel > h2 {
+  width: 70%;
+  text-align: center;
+}
+
+.input-field {
+  display: flex;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
+  width: 70%;
+}
+
+.input-field:disabled,
+select:disabled,
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.file-upload {
+  display: flex;
+  flex-direction: column;
+  width: 70%;
+  padding: 10px 0px;
+  gap: 20px;
+}
+
+.file-button {
+  display: flex;
+  gap: 5px;
+  cursor: pointer;
+  transition: 0.3s ease-in-out;
+}
+
+.file-button:hover {
+  scale: 1.05;
+}
+
+.file-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.file-button:disabled:hover {
+  scale: 1;
+}
+
+.file-button > .icon {
+  height: auto;
+  width: 50px;
+  justify-self: center;
+  align-self: center;
+}
+
+.file-info {
+  display: flex;
+
+  flex-direction: column;
+  justify-content: center;
+  align-items: start;
+
+  height: 100%;
+  width: calc(100% - 50px - 5px);
+}
+
+.file-path {
+  max-width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: block;
+}
+
+.next-button-container {
+  width: 70%;
+  display: flex;
+  justify-content: space-around;
+
+  padding: 30px;
+}
+
+.next-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  height: 50px;
+  width: 50px;
+  background-color: #333;
+  border: none;
+  border-radius: 50%;
+
+  color: white;
+  font-size: 20px;
+
+  cursor: pointer;
+  transition: 0.3s ease-in-out;
+}
+
+.next-button:hover {
+  scale: 1.1;
+}
+
+.next-button:disabled {
+  background-color: #666;
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.next-button:disabled:hover {
+  scale: 1;
+}
+
+.input-data-page-container > .right-panel {
+  width: 50%;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  gap: 20px;
+}
+
+.metrics-table {
+  width: 70%;
+  border-collapse: collapse;
+}
+
+.metrics-table th,
+.metrics-table td {
+  border: 1px solid #ccc;
+  padding: 8px;
+  text-align: left;
+}
+
+.metrics-table th {
+  background-color: #f0f0f0;
+}
+
+.no-metrics {
+  text-align: center;
+  padding: 20px;
+  font-style: italic;
+}

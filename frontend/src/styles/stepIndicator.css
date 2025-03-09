@@ -1,0 +1,44 @@
+.step-indicator-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 20px 0;
+  min-width: 500px;
+}
+
+.step-indicator {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  font-size: 18px;
+  font-weight: bold;
+  color: #333;
+  background: #ccc;
+  margin: 0 10px;
+  cursor: default;
+  transition: all 0.3s ease-in-out;
+}
+
+.step-indicator.active {
+  background: #007bff;
+  color: white;
+  transform: scale(1.1);
+}
+
+.step-indicator.clickable {
+  background: #28a745;
+  color: white;
+  cursor: pointer;
+}
+
+.step-indicator.clickable:hover {
+  background: #218838;
+}
+
+.step-indicator.loading {
+  background: #ffc107;
+  color: black;
+}

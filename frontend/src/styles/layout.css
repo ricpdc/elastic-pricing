@@ -1,0 +1,25 @@
+.layout {
+  display: flex;
+  flex-direction: column;
+
+  height: 100vh;
+}
+
+header {
+  display: flex;
+  align-items: center;
+  min-height: 60px;
+  max-height: 10vh;
+  flex-shrink: 0;
+  padding: 10px;
+  background-color: #ddd;
+}
+
+h1 {
+  font-size: clamp(1.5rem, 5vh, 2.5rem);
+}
+
+main {
+  display: flex;
+  flex: 1;
+}
