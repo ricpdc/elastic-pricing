@@ -5,8 +5,7 @@ from dimod import BinaryQuadraticModel
 
 
 # Solve the QUBO model using the specified solver
-def solve_qubo_model(Q, offset=0, solver_type="quantum", num_reads=10):
-    print("Solving the QUBO model using the {} solver...".format(solver_type))
+def solve_qubo_model(Q, offset=0, solver_type="exact", num_reads=10):
 
     bqm = BinaryQuadraticModel.from_qubo(Q, offset=offset)
 
