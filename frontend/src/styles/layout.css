@@ -19,6 +19,13 @@ h1 {
   font-size: clamp(1.5rem, 5vh, 2.5rem);
 }
 
+header > h1 > img {
+  height: 100%;
+  max-height: 50px;
+  width: auto;
+  object-fit: contain;
+}
+
 main {
   display: flex;
   flex: 1;
