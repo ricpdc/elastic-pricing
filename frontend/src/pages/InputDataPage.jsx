@@ -30,7 +30,6 @@ export default function InputDataPage({
   const handleNext = () => {
     if (
       !projectData.projectName ||
-      !projectData.apiKey ||
       !projectData.clustering ||
       !projectData.solver ||
       !filePrices ||
@@ -39,6 +38,11 @@ export default function InputDataPage({
       console.error(
         "Por favor, introduce todos los campos y selecciona los archivos CSV."
       );
+      return;
+    }
+
+    if (!projectData.apiKey && projectData.solver !== "exact") {
+      console.error("Por favor, introduce una API KEY.");
       return;
     }
 
@@ -240,9 +244,9 @@ export default function InputDataPage({
             <tbody>
               {[
                 { key: "num_productos", label: "Nº de productos" },
-                { key: "max_precios", label: "Máx. precios por producto" },
-                { key: "min_precios", label: "Mín. precios por producto" },
                 { key: "media_precios", label: "Media precios por producto" },
+                { key: "min_precios", label: "Mín. precios por producto" },
+                { key: "max_precios", label: "Máx. precios por producto" },
                 { key: "num_elasticidades", label: "Nº de elasticidades" },
               ].map(({ key, label }) => (
                 <tr key={key}>

@@ -9,7 +9,9 @@ from utils import (
 )
 
 
-def solve_and_integrate(folder_path, output_file, solver_type="quantum", num_reads=10):
+def solve_and_integrate(
+    folder_path, output_file, solver_type="quantum", num_reads=10, token=None
+):
     solutions = {}
 
     # Create the output file if it does not exist
@@ -41,7 +43,9 @@ def solve_and_integrate(folder_path, output_file, solver_type="quantum", num_rea
                 continue
 
             # Solve the QUBO model
-            result = solve_qubo_model(Q, solver_type=solver_type, num_reads=num_reads)
+            result = solve_qubo_model(
+                Q, token=token, solver_type=solver_type, num_reads=num_reads
+            )
 
             # Extract the solution
             sample = result.first.sample
@@ -98,11 +102,16 @@ def main():
     parser.add_argument(
         "--num_reads", type=int, default=10, help="Number of reads for the solver."
     )
+    parser.add_argument("--token", help="D-Wave API token for the quantum solver.")
     args = parser.parse_args()
 
     # Solve and integrate solutions
     solve_and_integrate(
-        args.folder, args.output, solver_type=args.solver, num_reads=args.num_reads
+        args.folder,
+        args.output,
+        solver_type=args.solver,
+        num_reads=args.num_reads,
+        token=args.token,
     )
 
 

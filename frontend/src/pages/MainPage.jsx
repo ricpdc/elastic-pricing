@@ -39,7 +39,8 @@ export default function MainPage() {
         `${projectData.projectPath}/clusters`,
         `${projectData.projectPath}/solutions.csv`,
         projectData.solver,
-        10 // num_reads
+        10, // num_reads
+        projectData.apiKey
       );
 
       if (response.status === "success") {

@@ -30,13 +30,14 @@ contextBridge.exposeInMainWorld("electron", {
     ipcRenderer.invoke("get-cluster-files-paths", clustersPath),
   getClusterData: (clustersPath, clusterNumber) =>
     ipcRenderer.invoke("get-cluster-data", clustersPath, clusterNumber),
-  runElasticPricing: (folderPath, outputFile, solverType, numReads) =>
+  runElasticPricing: (folderPath, outputFile, solverType, numReads, token) =>
     ipcRenderer.invoke(
       "run-elastic-pricing",
       folderPath,
       outputFile,
       solverType,
-      numReads
+      numReads,
+      token
     ),
   getResultsData: (resultsFilePath) =>
     ipcRenderer.invoke("get-results-data", resultsFilePath),

@@ -107,9 +107,11 @@ export default function ClusteringPage({
                   </span>
                 </div>
                 <div className="metric-item">
-                  <span className="metric-name">Máx. precios por producto</span>
+                  <span className="metric-name">
+                    Media precios por producto
+                  </span>
                   <span className="metric-value">
-                    {clusterMetrics.max_prices}
+                    {clusterMetrics.avg_prices}
                   </span>
                 </div>
                 <div className="metric-item">
@@ -119,11 +121,9 @@ export default function ClusteringPage({
                   </span>
                 </div>
                 <div className="metric-item">
-                  <span className="metric-name">
-                    Media precios por producto
-                  </span>
+                  <span className="metric-name">Máx. precios por producto</span>
                   <span className="metric-value">
-                    {clusterMetrics.avg_prices}
+                    {clusterMetrics.max_prices}
                   </span>
                 </div>
                 <div className="metric-item">

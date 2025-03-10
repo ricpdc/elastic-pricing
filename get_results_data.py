@@ -28,7 +28,7 @@ def read_results_data(results_file):
         for row in csv_reader:
             if len(row) >= 3:
                 results_data.append(
-                    {"product": int(row[0]), "price": float(row[1]), "cluster": row[2]}
+                    {"product": int(row[0]), "price": str(row[1]), "cluster": row[2]}
                 )
 
     print(json.dumps(results_data))

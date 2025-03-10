@@ -13,6 +13,7 @@ async function createWindow() {
   let mainWindow = new BrowserWindow({
     width: 900,
     height: 680,
+    icon: path.join(__dirname, "favicon.png"),
     webPreferences: {
       nodeIntegration: false,
       contextIsolation: true,
@@ -127,13 +128,14 @@ async function createWindow() {
 
   ipcMain.handle(
     "run-elastic-pricing",
-    async (event, folderPath, outputFile, solverType, numReads) => {
+    async (event, folderPath, outputFile, solverType, numReads, token) => {
       try {
         const result = await runElasticPricing(
           folderPath,
           outputFile,
           solverType,
-          numReads
+          numReads,
+          token
         );
         return result;
       } catch (error) {
@@ -355,7 +357,13 @@ function getClusterData(clustersPath, clusterNumber) {
   });
 }
 
-function runElasticPricing(folderPath, outputFile, solverType, numReads) {
+function runElasticPricing(
+  folderPath,
+  outputFile,
+  solverType,
+  numReads,
+  token
+) {
   return new Promise((resolve, reject) => {
     const scriptPath = path.join(
       __dirname,
@@ -372,6 +380,8 @@ function runElasticPricing(folderPath, outputFile, solverType, numReads) {
       solverType,
       "--num_reads",
       numReads.toString(),
+      "--token",
+      token,
     ]);
 
     let output = "";
