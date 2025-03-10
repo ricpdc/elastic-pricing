@@ -21,6 +21,8 @@ async function createWindow() {
     },
   });
 
+  mainWindow.removeMenu();
+
   mainWindow.loadURL(
     isDev
       ? "http://localhost:3000"
@@ -399,7 +401,7 @@ function runElasticPricing(
       if (code === 0) {
         resolve({
           status: "success",
-          message: "Elastic pricing completed",
+          message: "Asignación de precios completada",
           output,
         });
       } else {

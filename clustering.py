@@ -88,7 +88,7 @@ def main():
                 prefix=f"{method}_cluster",
                 subgraph_index=i + 1,
             )
-        print(json.dumps({"status": "success", "message": "Clustering completed"}))
+        print(json.dumps({"status": "success", "message": "Clustering completado"}))
     except Exception as e:
         print(json.dumps({"status": "error", "message": str(e)}))
         sys.exit(1)
