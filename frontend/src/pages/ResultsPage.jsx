@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { MaterialSymbolsLightArrowLeftRounded } from "../assets/leftPageIcon";
 import { MaterialSymbolsLightArrowRightRounded } from "../assets/rightPageIcon";
+import { GardenReloadFill16 } from "../assets/reloadIcon";
 
 import "../styles/resultsPage.css";
 
@@ -36,6 +37,17 @@ export default function ResultsPage({ projectData }) {
     let value = parseInt(e.target.value, 10);
     if (!isNaN(value) && value >= 1 && value <= totalPages) {
       setCurrentPage(value);
+    }
+  };
+
+  const handleRestart = async () => {
+    const confirmed = await window.electron.showDialog(
+      "Confirmar reinicio",
+      "¿Estás seguro de que quieres reiniciar el proceso?"
+    );
+
+    if (confirmed) {
+      window.location.reload();
     }
   };
 
@@ -102,7 +114,9 @@ export default function ResultsPage({ projectData }) {
         </div>
 
         <div className="next-button-container">
-          <button className="next-button">➜</button>
+          <button className="next-button" onClick={handleRestart}>
+            <GardenReloadFill16 />
+          </button>
         </div>
       </div>
       <div className="right-panel">

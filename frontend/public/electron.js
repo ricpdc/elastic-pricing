@@ -154,6 +154,19 @@ async function createWindow() {
       return error;
     }
   });
+
+  ipcMain.handle("show-dialog", async (event, title, message) => {
+    const result = dialog.showMessageBoxSync({
+      type: "question",
+      title: title,
+      message: message,
+      buttons: ["Cancelar", "Aceptar"],
+      defaultId: 1,
+      cancelId: 0,
+    });
+
+    return result === 1;
+  });
 }
 
 function openFileDialog() {

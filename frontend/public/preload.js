@@ -41,4 +41,6 @@ contextBridge.exposeInMainWorld("electron", {
     ),
   getResultsData: (resultsFilePath) =>
     ipcRenderer.invoke("get-results-data", resultsFilePath),
+  showDialog: (title, message) =>
+    ipcRenderer.invoke("show-dialog", title, message),
 });
