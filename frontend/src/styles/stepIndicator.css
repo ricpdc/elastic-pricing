@@ -32,19 +32,19 @@
 }
 
 .step-indicator.active {
-  background: #0056b3;
+  background: #333;
   color: white;
-  transform: scale(1.1);
+  transform: scale(1.2);
 }
 
 .step-indicator.completed {
-  background: #28a745;
+  background: #333;
   color: white;
   cursor: pointer;
 }
 
 .step-indicator.completed:hover {
-  background: #218838;
+  scale: 1.1;
 }
 
 .step-indicator.loading {
@@ -62,7 +62,7 @@
   height: 100%;
   border-radius: 50%;
   border: 3px solid transparent;
-  border-top: 3px solid #007bff;
+  border-top: 3px solid #333;
   animation: spin 1s linear infinite;
 }
 
