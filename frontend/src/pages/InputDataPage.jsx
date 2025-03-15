@@ -131,7 +131,6 @@ export default function InputDataPage({
       );
 
       if (response.status === "success") {
-        alert(response.message);
         setCompletedSteps([completedSteps[0], true, completedSteps[2]]);
         setLoadingSteps([false, false, true]);
       } else {

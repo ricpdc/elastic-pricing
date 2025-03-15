@@ -44,7 +44,6 @@ export default function MainPage() {
       );
 
       if (response.status === "success") {
-        alert(response.message);
         setCompletedSteps([true, true, true]);
       } else {
         console.error("Error al obtener soluciones.");
