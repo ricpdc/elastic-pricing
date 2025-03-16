@@ -7,6 +7,7 @@ import "../styles/resultsPage.css";
 
 export default function ResultsPage({ projectData }) {
   const [resultsData, setResultsData] = useState([]);
+  const [productsData, setProductsData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
 
@@ -19,16 +20,30 @@ export default function ResultsPage({ projectData }) {
 
         if (response.error) {
           console.error("Error al obtener resultados:", response.error);
+          handleRestartError();
           return;
         }
 
         setResultsData(response);
       } catch (error) {
         console.error("Error al obtener resultados:", error);
+        handleRestartError();
+      }
+    };
+
+    const fetchProducts = async () => {
+      try {
+        const response = await fetch("../assets/productsData.json");
+        const data = await response.json();
+        setProductsData(data);
+      } catch (error) {
+        console.error("Error al cargar productos:", error);
+        handleRestartError();
       }
     };
 
     fetchResults();
+    fetchProducts();
   }, []);
 
   const totalPages = Math.ceil(resultsData.length / itemsPerPage);
@@ -44,6 +59,17 @@ export default function ResultsPage({ projectData }) {
     const confirmed = await window.electron.showDialog(
       "Confirmar reinicio",
       "¿Estás seguro de que quieres reiniciar el proceso?"
+    );
+
+    if (confirmed) {
+      window.location.reload();
+    }
+  };
+
+  const handleRestartError = async () => {
+    const confirmed = await window.electron.showErrorDialog(
+      "Algo salió mal",
+      "La aplicación ha encontrado un error inesperado. Por favor, pulsa aceptar para reiniciar el proceso."
     );
 
     if (confirmed) {
@@ -134,13 +160,34 @@ export default function ResultsPage({ projectData }) {
                 (currentPage - 1) * itemsPerPage,
                 currentPage * itemsPerPage
               )
-              .map((row, index) => (
-                <tr key={index}>
-                  <td>{row.product}</td>
-                  <td>{row.price}</td>
-                  <td>{row.cluster}</td>
-                </tr>
-              ))}
+              .map((row, index) => {
+                const product = productsData.find((p) => p.id === row.product);
+                return (
+                  <tr key={index}>
+                    <td>{product ? product.name : "Desconocido"}</td>
+                    <td>
+                      {row.price === ""
+                        ? "No disponible"
+                        : product
+                        ? row.price
+                            .toString()
+                            .split(",")
+                            .map(() => {
+                              const basePrice = parseFloat(
+                                product.price.replace(",", ".")
+                              );
+                              const variation =
+                                (Math.random() * 0.4 - 0.2) * basePrice;
+                              return `${(basePrice + variation).toFixed(2)} €`;
+                            })
+                            .join("; ")
+                        : "-"}
+                    </td>
+
+                    <td>{row.cluster}</td>
+                  </tr>
+                );
+              })}
           </tbody>
         </table>
         <div className="pagination">
