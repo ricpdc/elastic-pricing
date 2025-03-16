@@ -50,6 +50,7 @@ export default function InputDataPage({
       setupProject();
     } catch (error) {
       console.error("Error en el proceso:", error);
+      handleRestart();
     }
   };
 
@@ -74,6 +75,7 @@ export default function InputDataPage({
       );
     } catch (error) {
       console.error(error);
+      handleRestart();
     }
   };
 
@@ -104,9 +106,11 @@ export default function InputDataPage({
         updateProjectData("metrics", response.metrics);
       } else {
         console.error("Error al calcular métricas.");
+        handleRestart();
       }
     } catch (e) {
       console.error("Error calculando las métricas.");
+      handleRestart();
     } finally {
       setLoadingMetrics(false);
     }
@@ -138,6 +142,18 @@ export default function InputDataPage({
       }
     } catch (error) {
       console.error("Error en clustering:", error);
+      handleRestart();
+    }
+  };
+
+  const handleRestart = async () => {
+    const confirmed = await window.electron.showErrorDialog(
+      "Algo salió mal",
+      "La aplicación ha encontrado un error inesperado. Por favor, pulsa aceptar para reiniciar el proceso."
+    );
+
+    if (confirmed) {
+      window.location.reload();
     }
   };
 

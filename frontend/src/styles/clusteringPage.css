@@ -121,6 +121,11 @@
   width: 100%;
 }
 
+.table-container table th,
+.table-container table td {
+  text-align: center;
+}
+
 .pagination {
   display: flex;
   align-items: center;

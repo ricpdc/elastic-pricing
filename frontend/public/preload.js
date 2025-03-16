@@ -43,4 +43,5 @@ contextBridge.exposeInMainWorld("electron", {
     ipcRenderer.invoke("get-results-data", resultsFilePath),
   showDialog: (title, message) =>
     ipcRenderer.invoke("show-dialog", title, message),
+  showErrorDialog: () => ipcRenderer.send("show-error-dialog"),
 });

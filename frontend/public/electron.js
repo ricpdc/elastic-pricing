@@ -167,6 +167,19 @@ async function createWindow() {
 
     return result === 1;
   });
+
+  ipcMain.on("show-error-dialog", (event) => {
+    dialog
+      .showMessageBox(mainWindow, {
+        type: "error",
+        title: "Error en la aplicación",
+        message: "Algo salió mal. La aplicación se reiniciará.",
+        buttons: ["Aceptar"],
+      })
+      .then(() => {
+        mainWindow.reload();
+      });
+  });
 }
 
 function openFileDialog() {

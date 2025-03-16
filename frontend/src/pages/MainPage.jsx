@@ -47,11 +47,24 @@ export default function MainPage() {
         setCompletedSteps([true, true, true]);
       } else {
         console.error("Error al obtener soluciones.");
+        handleRestart();
       }
     } catch (error) {
       console.error("Error al obtener soluciones:", error);
+      handleRestart();
     } finally {
       setLoadingSteps([false, false, false]);
+    }
+  };
+
+  const handleRestart = async () => {
+    const confirmed = await window.electron.showErrorDialog(
+      "Algo salió mal",
+      "La aplicación ha encontrado un error inesperado. Por favor, pulsa aceptar para reiniciar el proceso."
+    );
+
+    if (confirmed) {
+      window.location.reload();
     }
   };
 

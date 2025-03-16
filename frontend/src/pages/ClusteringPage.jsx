@@ -29,6 +29,7 @@ export default function ClusteringPage({
         setClustersCount(count);
         setSelectedCluster(1);
       } catch (error) {
+        handleRestart();
         console.error("Error al obtener los clusters:", error);
       }
     };
@@ -54,6 +55,7 @@ export default function ClusteringPage({
 
       if (response.error) {
         console.error("Error al obtener datos del cluster:", response.error);
+        handleRestart();
         return;
       }
 
@@ -62,6 +64,7 @@ export default function ClusteringPage({
       setElasticitiesData(response.elasticities);
     } catch (error) {
       console.error("Error al obtener datos del cluster:", error);
+      handleRestart();
     }
   };
 
@@ -74,6 +77,17 @@ export default function ClusteringPage({
     let value = parseInt(e.target.value, 10);
     if (!isNaN(value) && value >= 1 && value <= maxPages) {
       setPage(value);
+    }
+  };
+
+  const handleRestart = async () => {
+    const confirmed = await window.electron.showErrorDialog(
+      "Algo salió mal",
+      "La aplicación ha encontrado un error inesperado. Por favor, pulsa aceptar para reiniciar el proceso."
+    );
+
+    if (confirmed) {
+      window.location.reload();
     }
   };
 
