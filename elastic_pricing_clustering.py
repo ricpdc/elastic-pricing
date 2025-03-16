@@ -50,12 +50,14 @@ def solve_and_integrate(
             # Extract the solution
             sample = result.first.sample
             for var, value in sample.items():
+                parts = var.split("_")
+                product = int(parts[0][1:])
+                price = int(parts[1][1:])
+
+                if product not in solutions:
+                    solutions[product] = {"prices": [], "cluster": prefix}
+
                 if value == 1:
-                    parts = var.split("_")
-                    product = int(parts[0][1:])
-                    price = int(parts[1][1:])
-                    if product not in solutions:
-                        solutions[product] = {"prices": [], "cluster": prefix}
                     solutions[product]["prices"].append(price)
 
     # Write the integrated solutions to the output file
