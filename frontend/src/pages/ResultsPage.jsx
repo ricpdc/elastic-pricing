@@ -8,8 +8,11 @@ import "../styles/resultsPage.css";
 export default function ResultsPage({ projectData }) {
   const [resultsData, setResultsData] = useState([]);
   const [productsData, setProductsData] = useState([]);
+  const [processedData, setProcessedData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
+
+  const [sortConfig, setSortConfig] = useState({ key: null, direction: "asc" });
 
   useEffect(() => {
     const fetchResults = async () => {
@@ -45,6 +48,70 @@ export default function ResultsPage({ projectData }) {
     fetchResults();
     fetchProducts();
   }, []);
+
+  useEffect(() => {
+    if (resultsData.length > 0 && productsData.length > 0) {
+      const combined = resultsData.map((row) => {
+        const product = productsData.find((p) => p.id === row.product);
+        let generatedPrices = "No disponible";
+
+        if (row.price !== "" && product) {
+          generatedPrices = row.price
+            .toString()
+            .split(",")
+            .map(() => {
+              const basePrice = parseFloat(product.price.replace(",", "."));
+              const variation = (Math.random() * 0.4 - 0.2) * basePrice;
+              return `${(basePrice + variation).toFixed(2)} €`;
+            })
+            .join("; ");
+        }
+
+        return {
+          name: product ? product.name : "Desconocido",
+          cluster: row.cluster,
+          price: generatedPrices,
+        };
+      });
+
+      setProcessedData(combined);
+    }
+  }, [resultsData, productsData]);
+
+  const sortedData = [...processedData].sort((a, b) => {
+    if (!sortConfig.key) return 0;
+
+    let aValue = a[sortConfig.key];
+    let bValue = b[sortConfig.key];
+
+    if (sortConfig.key === "price") {
+      const getFirstPrice = (str) =>
+        parseFloat(str.split(";")[0].replace(" €", "").replace(",", "."));
+      aValue = getFirstPrice(aValue);
+      bValue = getFirstPrice(bValue);
+    }
+
+    if (aValue < bValue) return sortConfig.direction === "asc" ? -1 : 1;
+    if (aValue > bValue) return sortConfig.direction === "asc" ? 1 : -1;
+    return 0;
+  });
+
+  const handleSort = (key) => {
+    setSortConfig((prevConfig) => {
+      if (prevConfig.key === key) {
+        return {
+          key,
+          direction: prevConfig.direction === "asc" ? "desc" : "asc",
+        };
+      }
+      return { key, direction: "asc" };
+    });
+  };
+
+  const getSortIndicator = (key) => {
+    if (sortConfig.key !== key) return "⇅";
+    return sortConfig.direction === "asc" ? "↑" : "↓";
+  };
 
   const totalPages = Math.ceil(resultsData.length / itemsPerPage);
 
@@ -149,45 +216,31 @@ export default function ResultsPage({ projectData }) {
         <table className="results-table">
           <thead>
             <tr>
-              <th>Producto</th>
-              <th>Precio</th>
-              <th>Cluster</th>
+              <th onClick={() => handleSort("name")}>
+                Producto {getSortIndicator("name")}
+              </th>
+              <th onClick={() => handleSort("price")}>
+                Precio {getSortIndicator("price")}
+              </th>
+              <th onClick={() => handleSort("cluster")}>
+                Cluster {getSortIndicator("cluster")}
+              </th>
             </tr>
           </thead>
+
           <tbody>
-            {resultsData
+            {sortedData
               .slice(
                 (currentPage - 1) * itemsPerPage,
                 currentPage * itemsPerPage
               )
-              .map((row, index) => {
-                const product = productsData.find((p) => p.id === row.product);
-                return (
-                  <tr key={index}>
-                    <td>{product ? product.name : "Desconocido"}</td>
-                    <td>
-                      {row.price === ""
-                        ? "No disponible"
-                        : product
-                        ? row.price
-                            .toString()
-                            .split(",")
-                            .map(() => {
-                              const basePrice = parseFloat(
-                                product.price.replace(",", ".")
-                              );
-                              const variation =
-                                (Math.random() * 0.4 - 0.2) * basePrice;
-                              return `${(basePrice + variation).toFixed(2)} €`;
-                            })
-                            .join("; ")
-                        : "-"}
-                    </td>
-
-                    <td>{row.cluster}</td>
-                  </tr>
-                );
-              })}
+              .map((row, index) => (
+                <tr key={index}>
+                  <td>{row.name}</td>
+                  <td>{row.price}</td>
+                  <td>{row.cluster}</td>
+                </tr>
+              ))}
           </tbody>
         </table>
         <div className="pagination">
