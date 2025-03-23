@@ -11,19 +11,20 @@ header {
   min-height: 60px;
   max-height: 10vh;
   flex-shrink: 0;
-  padding: 10px;
-  background-color: #ddd;
+  padding: 0px 0px 0px 30px;
+  background: var(--color-bg);
+
+  border-bottom: 3px solid var(--color-secundary);
+
+  position: sticky;
+  top: 0;
+  z-index: 1000;
 }
 
 h1 {
-  font-size: clamp(1.5rem, 5vh, 2.5rem);
-}
-
-header > h1 > img {
-  height: 100%;
-  max-height: 50px;
-  width: auto;
-  object-fit: contain;
+  font-size: clamp(2rem, 5vh, 4rem);
+  font-weight: 800;
+  color: var(--color-primary);
 }
 
 main {

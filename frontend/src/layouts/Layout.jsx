@@ -7,9 +7,7 @@ export default function Layout() {
   return (
     <div className="layout">
       <header>
-        <h1>
-          <img src="../qap.png" alt="logo" />
-        </h1>
+        <h1>QAP</h1>
       </header>
       <main>
         <Outlet />

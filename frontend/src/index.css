@@ -20,3 +20,10 @@ body {
   display: flex;
   flex-direction: column;
 }
+
+:root {
+  --color-primary: #f09223;
+  --color-secundary: #2b3482;
+  --color-secundary-light: #9498c1;
+  --color-bg: #fdfefe;
+}

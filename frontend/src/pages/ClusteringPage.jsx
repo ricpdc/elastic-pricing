@@ -18,7 +18,7 @@ export default function ClusteringPage({
 
   const [currentPagePrices, setCurrentPagePrices] = useState(1);
   const [currentPageElasticities, setCurrentPageElasticities] = useState(1);
-  const itemsPerPage = 7;
+  const [itemsPerPage, setItemsPerPage] = useState(5);
 
   useEffect(() => {
     const fetchClusters = async () => {
@@ -68,6 +68,21 @@ export default function ClusteringPage({
     }
   };
 
+  useEffect(() => {
+    const updateItemsPerPage = () => {
+      const height = window.innerHeight;
+
+      if (height < 500) setItemsPerPage(4);
+      else if (height < 900) setItemsPerPage(6);
+      else setItemsPerPage(10);
+    };
+
+    updateItemsPerPage();
+
+    window.addEventListener("resize", updateItemsPerPage);
+    return () => window.removeEventListener("resize", updateItemsPerPage);
+  }, []);
+
   const clusterOptions = Array.from({ length: clustersCount }, (_, i) => ({
     value: i + 1,
     label: `Cluster ${i + 1}`,
@@ -105,6 +120,27 @@ export default function ClusteringPage({
           isSearchable={true}
           menuPlacement="auto"
           maxMenuHeight={200}
+          styles={{
+            control: (base) => ({
+              ...base,
+              borderColor: "#2B3482",
+              "&:hover": { borderColor: "#F09223" },
+              boxShadow: "none",
+            }),
+            option: (base, state) => ({
+              ...base,
+              backgroundColor: state.isSelected
+                ? "#2B3482"
+                : state.isFocused
+                ? "#9498C1"
+                : "white",
+              color: state.isSelected || state.isFocused ? "white" : "black",
+            }),
+            singleValue: (base) => ({
+              ...base,
+              color: "#2F3444",
+            }),
+          }}
           noOptionsMessage={() => "No se encontraron clusters"}
         />
       </div>
@@ -112,44 +148,36 @@ export default function ClusteringPage({
         <div className="left-panel">
           <div className="cluster-metrics">
             <h2>MÉTRICAS DEL CLUSTER</h2>
-            {clusterMetrics ? (
-              <>
-                <div className="metric-item">
-                  <span className="metric-name">Nº de productos</span>
-                  <span className="metric-value">
-                    {clusterMetrics.num_products}
-                  </span>
-                </div>
-                <div className="metric-item">
-                  <span className="metric-name">
-                    Media precios por producto
-                  </span>
-                  <span className="metric-value">
-                    {clusterMetrics.avg_prices}
-                  </span>
-                </div>
-                <div className="metric-item">
-                  <span className="metric-name">Mín. precios por producto</span>
-                  <span className="metric-value">
-                    {clusterMetrics.min_prices}
-                  </span>
-                </div>
-                <div className="metric-item">
-                  <span className="metric-name">Máx. precios por producto</span>
-                  <span className="metric-value">
-                    {clusterMetrics.max_prices}
-                  </span>
-                </div>
-                <div className="metric-item">
-                  <span className="metric-name">Nº de elasticidades</span>
-                  <span className="metric-value">
-                    {clusterMetrics.num_elasticities}
-                  </span>
-                </div>
-              </>
-            ) : (
-              <p>Cargando métricas...</p>
-            )}
+            <div className="metric-item">
+              <span className="metric-name">Nº de productos</span>
+              <span className="metric-value">
+                {clusterMetrics ? clusterMetrics.num_products : "-"}
+              </span>
+            </div>
+            <div className="metric-item">
+              <span className="metric-name">Media precios por producto</span>
+              <span className="metric-value">
+                {clusterMetrics ? clusterMetrics.avg_prices : "-"}
+              </span>
+            </div>
+            <div className="metric-item">
+              <span className="metric-name">Mín. precios por producto</span>
+              <span className="metric-value">
+                {clusterMetrics ? clusterMetrics.min_prices : "-"}
+              </span>
+            </div>
+            <div className="metric-item">
+              <span className="metric-name">Máx. precios por producto</span>
+              <span className="metric-value">
+                {clusterMetrics ? clusterMetrics.max_prices : "-"}
+              </span>
+            </div>
+            <div className="metric-item">
+              <span className="metric-name">Nº de elasticidades</span>
+              <span className="metric-value">
+                {clusterMetrics ? clusterMetrics.num_elasticities : "-"}
+              </span>
+            </div>
           </div>
 
           <div className="next-button-container">

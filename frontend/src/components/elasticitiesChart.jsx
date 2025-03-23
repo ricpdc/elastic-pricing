@@ -47,7 +47,7 @@ export default function ElasticityChart({ elasticitySummary }) {
             }}
           />
           <Tooltip formatter={(value, name) => [`${value}`, "Frecuencia"]} />
-          <Bar dataKey="count" fill="#82ca9d" name="Frecuencia" />
+          <Bar dataKey="count" fill="#f09223" name="Frecuencia" />
         </BarChart>
       </ResponsiveContainer>
     </div>

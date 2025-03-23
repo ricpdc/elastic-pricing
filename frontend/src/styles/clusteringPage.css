@@ -46,22 +46,21 @@
   width: 70%;
   padding: 10px;
   border-radius: 5px;
-  font-size: 16px;
 
-  background: #f8f8f8;
-  border: 1px solid #ddd;
+  background-color: var(--color-bg);
+
+  border: 2px solid var(--color-secundary-light);
   border-radius: 8px;
   padding: 15px 20px;
-  font-size: 16px;
   text-align: left;
 }
 
 .cluster-metrics h2 {
-  font-size: 20px;
+  font-weight: 600;
   margin-bottom: 10px;
-  color: #333;
+  color: var(--color-secundary);
   text-align: center;
-  border-bottom: 2px solid #ddd;
+  border-bottom: 2px solid var(--color-primary);
   padding-bottom: 5px;
 }
 
@@ -69,8 +68,8 @@
   display: flex;
   justify-content: space-between;
   padding: 5px 0;
-  font-size: 16px;
-  border-bottom: 1px solid #eee;
+  font-size: 18px;
+  border-bottom: 1px solid var(--color-secundary-light);
   gap: 10px;
 }
 
@@ -80,7 +79,6 @@
 
 .cluster-metrics .metric-name {
   font-weight: bold;
-  color: #444;
   text-align: left;
 }
 
@@ -124,6 +122,7 @@
 .table-container table th,
 .table-container table td {
   text-align: center;
+  padding: 10px;
 }
 
 .pagination {
@@ -147,25 +146,23 @@
 
 .pagination button {
   margin: 0 5px;
-  color: #fff;
+  color: var(--color-bg);
   height: 30px;
   width: 30px;
 
   border: none;
-  background-color: #333;
+  background-color: var(--color-primary);
   border-radius: 50%;
   transition: 0.3s ease-in-out;
 }
 
 .pagination button:hover {
-  background-color: #444;
   cursor: pointer;
   scale: 1.05;
 }
 
 .pagination button:disabled:hover {
   scale: 1;
-  background-color: #333;
   cursor: not-allowed;
 }
 

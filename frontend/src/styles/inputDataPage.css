@@ -2,7 +2,6 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-
   height: 100%;
   width: 100%;
 }
@@ -10,34 +9,41 @@
 .input-data-page-container {
   display: flex;
   height: 100%;
-
-  gap: 30px;
 }
 
 .input-data-page-container > .left-panel {
-  width: 50%;
+  width: 40%;
   height: 100%;
   min-width: 250px;
-
   display: flex;
   flex-direction: column;
   justify-content: center;
-
-  gap: 20px;
 }
 
 .input-data-page-container > .left-panel > h2 {
   width: 70%;
   text-align: center;
+  color: var(--color-secundary);
+  font-weight: 600;
+  border-bottom: 2px solid var(--color-primary);
+  padding-bottom: 8px;
 }
 
 .input-field {
   display: flex;
   padding: 10px;
-  border: 1px solid #ccc;
+  border: 1px solid var(--color-secundary);
   border-radius: 5px;
   font-size: 16px;
   width: 70%;
+  background-color: var(--color-bg);
+  transition: all 0.3s ease;
+}
+
+.input-field:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 2px rgba(255, 152, 0, 0.2);
 }
 
 .input-field:disabled,
@@ -57,13 +63,19 @@ button:disabled {
 
 .file-button {
   display: flex;
-  gap: 5px;
+  gap: 10px;
   cursor: pointer;
   transition: 0.3s ease-in-out;
+  padding: 12px;
+  border: 1px solid var(--color-secundary);
+  border-radius: 5px;
+  background-color: transparent;
 }
 
 .file-button:hover {
-  scale: 1.05;
+  scale: 1.02;
+  border-color: var(--color-primary);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .file-button:disabled {
@@ -73,24 +85,30 @@ button:disabled {
 
 .file-button:disabled:hover {
   scale: 1;
+  border-color: var(--color-secundary);
+  box-shadow: none;
 }
 
 .file-button > .icon {
   height: auto;
-  width: 50px;
+  width: 40px;
   justify-self: center;
   align-self: center;
 }
 
 .file-info {
   display: flex;
-
   flex-direction: column;
   justify-content: center;
   align-items: start;
-
   height: 100%;
-  width: calc(100% - 50px - 5px);
+  width: calc(100% - 50px - 10px);
+}
+
+.file-info h4 {
+  color: var(--color-secundary);
+  margin: 0 0 5px 0;
+  font-size: 15px;
 }
 
 .file-path {
@@ -99,13 +117,14 @@ button:disabled {
   overflow: hidden;
   text-overflow: ellipsis;
   display: block;
+  color: #666;
+  font-size: 0.9em;
 }
 
 .next-button-container {
   width: 70%;
   display: flex;
   justify-content: space-around;
-
   padding: 30px;
 }
 
@@ -113,18 +132,16 @@ button:disabled {
   display: flex;
   justify-content: center;
   align-items: center;
-
   height: 50px;
   width: 50px;
-  background-color: #333;
+  background-color: var(--color-primary);
   border: none;
   border-radius: 50%;
-
-  color: white;
+  color: #fdfefe;
   font-size: 20px;
-
   cursor: pointer;
   transition: 0.3s ease-in-out;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 .next-button:hover {
@@ -132,9 +149,9 @@ button:disabled {
 }
 
 .next-button:disabled {
-  background-color: #666;
   opacity: 0.6;
   cursor: not-allowed;
+  box-shadow: none;
 }
 
 .next-button:disabled:hover {
@@ -142,33 +159,38 @@ button:disabled {
 }
 
 .input-data-page-container > .right-panel {
-  width: 50%;
-
+  width: 60%;
   display: flex;
   flex-direction: column;
   justify-content: center;
-
   gap: 20px;
 }
 
 .metrics-table {
   width: 70%;
   border-collapse: collapse;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 5px;
+  overflow: hidden;
 }
 
 .metrics-table th,
 .metrics-table td {
-  border: 1px solid #ccc;
-  padding: 8px;
+  border: 1px solid #e0e0e0;
+  padding: 10px;
   text-align: left;
 }
 
 .metrics-table th {
-  background-color: #f0f0f0;
+  background-color: var(--color-secundary);
+  color: var(--color-bg);
+  font-weight: 500;
 }
 
-.no-metrics {
-  text-align: center;
-  padding: 20px;
-  font-style: italic;
+.metrics-table tr:nth-child(even) {
+  background-color: #f8f9fa;
+}
+
+.metrics-table tr:hover {
+  background-color: #e9ecef;
 }

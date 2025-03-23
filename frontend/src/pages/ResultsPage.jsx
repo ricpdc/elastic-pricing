@@ -109,8 +109,8 @@ export default function ResultsPage({ projectData }) {
   };
 
   const getSortIndicator = (key) => {
-    if (sortConfig.key !== key) return "⇅";
-    return sortConfig.direction === "asc" ? "↑" : "↓";
+    if (sortConfig.key !== key) return "▽";
+    return sortConfig.direction === "asc" ? "▲" : "▼";
   };
 
   const totalPages = Math.ceil(resultsData.length / itemsPerPage);
@@ -217,13 +217,26 @@ export default function ResultsPage({ projectData }) {
           <thead>
             <tr>
               <th onClick={() => handleSort("name")}>
-                Producto {getSortIndicator("name")}
+                <div className="th-content">
+                  <span>Producto</span>
+                  <span className="sort-icon">{getSortIndicator("name")}</span>
+                </div>
               </th>
+
               <th onClick={() => handleSort("price")}>
-                Precio {getSortIndicator("price")}
+                <div className="th-content">
+                  <span>Precio</span>
+                  <span className="sort-icon">{getSortIndicator("price")}</span>
+                </div>
               </th>
+
               <th onClick={() => handleSort("cluster")}>
-                Cluster {getSortIndicator("cluster")}
+                <div className="th-content">
+                  <span>Cluster</span>
+                  <span className="sort-icon">
+                    {getSortIndicator("cluster")}
+                  </span>
+                </div>
               </th>
             </tr>
           </thead>
