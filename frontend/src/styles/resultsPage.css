@@ -90,6 +90,26 @@
   justify-content: center;
 }
 
+.margin-of-sales {
+  display: flex;
+  justify-content: space-between;
+  width: 70%;
+  font-weight: bold;
+  margin-bottom: 1rem;
+  padding: 10px;
+  border-bottom: 2px solid var(--color-primary);
+}
+
+.margin-of-sales > p {
+  font-size: 18px;
+  color: var(--color-secundary);
+}
+
+.margin-of-sales > span {
+  font-size: 18px;
+  color: var(--color-secundary);
+}
+
 .results-table {
   width: 70%;
   min-height: 450px;

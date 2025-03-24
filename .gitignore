@@ -9,3 +9,5 @@ elastic-pricing-env/
 
 # Synthetic data
 data/
+
+node_modules/

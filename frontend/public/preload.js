@@ -44,4 +44,6 @@ contextBridge.exposeInMainWorld("electron", {
   showDialog: (title, message) =>
     ipcRenderer.invoke("show-dialog", title, message),
   showErrorDialog: () => ipcRenderer.send("show-error-dialog"),
+  getMarginOfSales: (resultsFilePath, pricesFilePath) =>
+    ipcRenderer.invoke("get-margin-of-sales", resultsFilePath, pricesFilePath),
 });

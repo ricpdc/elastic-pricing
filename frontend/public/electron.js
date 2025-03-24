@@ -180,6 +180,45 @@ async function createWindow() {
         mainWindow.reload();
       });
   });
+
+  ipcMain.handle(
+    "get-margin-of-sales",
+    async (event, resultsFilePath, pricesFilePath) => {
+      return new Promise((resolve, reject) => {
+        const python = spawn("python", [
+          path.join(__dirname, "../../get_margin_of_sales.py"),
+          resultsFilePath,
+          pricesFilePath,
+        ]);
+
+        let result = "";
+        let errorMessage = "";
+
+        python.stdout.on("data", (data) => {
+          result += data.toString();
+        });
+
+        python.stderr.on("data", (data) => {
+          errorMessage += data.toString();
+        });
+
+        python.on("close", (code) => {
+          if (code === 0) {
+            try {
+              const parsedResult = JSON.parse(result);
+              resolve(parsedResult);
+            } catch (error) {
+              console.error("Error al parsear el resultado:", error);
+              resolve({ error: "Error al parsear el resultado." });
+            }
+          } else {
+            console.error("Error en el script Python:", errorMessage);
+            resolve({ error: errorMessage || "Error en el script Python." });
+          }
+        });
+      });
+    }
+  );
 }
 
 function openFileDialog() {

@@ -9,6 +9,7 @@ export default function ResultsPage({ projectData }) {
   const [resultsData, setResultsData] = useState([]);
   const [productsData, setProductsData] = useState([]);
   const [processedData, setProcessedData] = useState([]);
+  const [marginOfSales, setMarginOfSales] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
 
@@ -45,8 +46,29 @@ export default function ResultsPage({ projectData }) {
       }
     };
 
+    const fetchMarginOfSales = async () => {
+      try {
+        const response = await window.electron.getMarginOfSales(
+          `${projectData.projectPath}/solutions.csv`,
+          `${projectData.filePricesPath}`
+        );
+
+        if (response.error) {
+          console.error("Error al obtener margen de ventas:", response.error);
+          handleRestartError();
+          return;
+        }
+
+        setMarginOfSales(response);
+      } catch (error) {
+        console.error("Error al obtener margen de ventas:", error);
+        handleRestartError();
+      }
+    };
+
     fetchResults();
     fetchProducts();
+    fetchMarginOfSales();
   }, []);
 
   useEffect(() => {
@@ -213,6 +235,11 @@ export default function ResultsPage({ projectData }) {
         </div>
       </div>
       <div className="right-panel">
+        <span className="margin-of-sales">
+          <p>Margen de ventas</p>
+          <span>{marginOfSales.toFixed(2)} €</span>
+        </span>
+
         <table className="results-table">
           <thead>
             <tr>
