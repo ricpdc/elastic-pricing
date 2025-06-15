@@ -1,0 +1,8 @@
+{
+  "name": "qap",
+  "version": "1.0.0",
+  "scripts": {
+    "install-deps": "pip install -r requirements.txt && cd frontend && npm install",
+    "start": "cd frontend && npm run electron-dev"
+  }
+}

@@ -3,6 +3,16 @@
   "version": "0.1.0",
   "private": true,
   "main": "public/electron.js",
+  "type": "module",
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject",
+    "electron:start": "electron .",
+    "electron-dev": "concurrently \"cross-env BROWSER=none npm start\" \"wait-on http://localhost:3000 && electron .\"",
+    "electron:pack": "electron-builder"
+  },
   "dependencies": {
     "cra-template": "1.2.0",
     "electron-is-dev": "^3.0.1",
@@ -14,14 +24,12 @@
     "react-select": "^5.10.0",
     "recharts": "^2.15.1"
   },
-  "type": "module",
-  "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject",
-    "electron:start": "electron .",
-    "electron-dev": "concurrently \"cross-env BROWSER=none npm start\" \"wait-on http://localhost:3000 && electron .\""
+  "devDependencies": {
+    "concurrently": "^9.1.2",
+    "cross-env": "^7.0.3",
+    "electron": "^34.0.1",
+    "electron-builder": "^25.1.8",
+    "wait-on": "^8.0.2"
   },
   "eslintConfig": {
     "extends": [
@@ -41,11 +49,30 @@
       "last 1 safari version"
     ]
   },
-  "devDependencies": {
-    "concurrently": "^9.1.2",
-    "cross-env": "^7.0.3",
-    "electron": "^34.0.1",
-    "electron-builder": "^25.1.8",
-    "wait-on": "^8.0.2"
+  "build": {
+    "appId": "com.elastic.pricing",
+    "productName": "ElasticPricing",
+    "files": [
+      "build/**/*",
+      "public/electron.js",
+      "../*.py",
+      "../utils/**/*",
+      "../data/**/*"
+    ],
+    "extraResources": [
+      {
+        "from": "../data/",
+        "to": "data/",
+        "filter": [
+          "**/*"
+        ]
+      }
+    ],
+    "directories": {
+      "buildResources": "assets"
+    },
+    "win": {
+      "target": "nsis"
+    }
   }
 }
