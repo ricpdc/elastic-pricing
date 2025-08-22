@@ -33,4 +33,4 @@ Make sure you have the following programs installed before starting the installa
    To start the application, from the root of the project, run the following command:
 
    ```bash
-   npm run
+   npm start
