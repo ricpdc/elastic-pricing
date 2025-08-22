@@ -1,37 +1,36 @@
-# Manual de Instalación - QAP
+# Installation Manual - QAP
 
-Este es un manual paso a paso para instalar y configurar QAP.
+This is a step-by-step manual to install and configure QAP.
 
-## Requisitos Previos
+## Prerequisites
 
-Asegúrate de tener instalados los siguientes programas antes de comenzar la instalación:
+Make sure you have the following programs installed before starting the installation:
 
-- **Node.js y npm:** [https://nodejs.org/en/download] Se recomienda utilizar Node.js versión 22.16.0 (LTS).
-- **Python:** [https://www.python.org/downloads/] Se recomienda utilizar Python versión 3.13.5.
+- **Node.js and npm:** [https://nodejs.org/en/download] It is recommended to use Node.js version 22.16.0 (LTS).
+- **Python:** [https://www.python.org/downloads/] It is recommended to use Python version 3.13.5.
 
-## Pasos de Instalación
+## Installation Steps
 
-1. **Clonar el Repositorio**
+1. **Clone the Repository**
 
-   Clona el repositorio de GitHub de la aplicación utilizando el siguiente comando:
+   Clone the application’s GitHub repository using the following command:
 
-   ```
+   ```bash
    git clone https://github.com/FerLRT/elastic-pricing
    ```
 
-2. **Instalar Dependencias**
+2. **Install Dependencies**
 
-   Desde una terminal, navega hasta la carpeta del proyecto y ejecuta el siguiente comando para instalar todas las dependencias necesarias:
+   From a terminal, navigate to the project folder and run the following command to install all the required dependencies:
 
-   ```
-   cd <carpeta_del_proyecto>
+   ```bash
+   cd <project_folder>
    npm run install-deps
    ```
 
-3. **Iniciar aplicación**
+3. **Start the Application**
 
-   Para iniciar la aplicación, desde la raíz del proyecto, ejecuta el siguiente comando:
+   To start the application, from the root of the project, run the following command:
 
-   ```
-   npm run start
-   ```
+   ```bash
+   npm run
